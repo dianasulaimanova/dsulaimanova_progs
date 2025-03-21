@@ -1,0 +1,44 @@
+2 задача на питоне 
+
+import math
+
+# Ввод данных
+V = float(input("Введите начальную скорость (V): "))
+alpha = float(input("Введите угол α (в градусах): "))
+g = 9.81  # Ускорение свободного падения
+
+# Перевод угла из градусов в радианы
+alpha_radians = math.radians(alpha)
+
+# Вычисление дальности полета L
+L = (V**2 * math.sin(2 * alpha_radians)) / g
+
+# Вывод результата
+print(f"Дальность полета L: {L:.2f} м")
+
+2 задача на си
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main() {
+    double V, alpha, g = 9.81;
+
+    // Ввод данных
+    cout << "Введите начальную скорость (V): ";
+    cin >> V;
+    cout << "Введите угол α (в градусах): ";
+    cin >> alpha;
+
+    // Перевод угла из градусов в радианы
+    double alpha_radians = alpha * M_PI / 180;
+
+    // Вычисление дальности полета L
+    double L = (pow(V, 2) * sin(2 * alpha_radians) / g;
+
+    // Вывод результата
+    cout << "Дальность полета L: " << L << " м" << endl;
+
+    return 0;
+}
