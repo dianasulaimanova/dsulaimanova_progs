@@ -1,0 +1,61 @@
+4 задача на питоне 
+
+import math
+
+# Ввод данных
+H = float(input("Введите высоту обрыва (H): "))
+V = float(input("Введите начальную скорость (V): "))
+alpha = float(input("Введите угол α (в градусах): "))
+t = float(input("Введите время t: "))
+g = 9.81  # Ускорение свободного падения
+
+# Перевод угла из градусов в радианы
+alpha_radians = math.radians(alpha)
+
+# Вычисление координат камня в момент времени t
+x_t = V * t * math.cos(alpha_radians)
+y_t = H + V * t * math.sin(alpha_radians) - 0.5 * g * t**2
+
+# Проверка, упал ли камень на дно обрыва
+y_t = max(y_t, 0)  # Если y_t < 0, то камень уже упал
+
+# Вывод результата
+print(f"Расстояние до края обрыва x(t): {x_t:.2f} м")
+print(f"Высота от дна обрыва y(t): {y_t:.2f} м")
+
+4 задача на си++
+
+#include <iostream>
+#include <cmath>
+#include <algorithm>  // Для функции max
+using namespace std;
+
+int main() {
+    double H, V, alpha, t, g = 9.81;
+
+    // Ввод данных
+    cout << "Введите высоту обрыва (H): ";
+    cin >> H;
+    cout << "Введите начальную скорость (V): ";
+    cin >> V;
+    cout << "Введите угол α (в градусах): ";
+    cin >> alpha;
+    cout << "Введите время t: ";
+    cin >> t;
+
+    // Перевод угла из градусов в радианы
+    double alpha_radians = alpha * M_PI / 180;
+
+    // Вычисление координат камня в момент времени t
+    double x_t = V * t * cos(alpha_radians);
+    double y_t = H + V * t * sin(alpha_radians) - 0.5 * g * t * t;
+
+    // Проверка, упал ли камень на дно обрыва
+    y_t = max(y_t, 0.0);  // Если y_t < 0, то камень уже упал
+
+    // Вывод результата
+    cout << "Расстояние до края обрыва x(t): " << x_t << " м" << endl;
+    cout << "Высота от дна обрыва y(t): " << y_t << " м" << endl;
+
+    return 0;
+}
