@@ -1,0 +1,62 @@
+import math
+
+def calculate_release_distance(height, speed):
+    """
+    Вычисляет подлётное расстояние S для сброса бомбы.
+    
+    Параметры:
+        height (float): Высота полёта H (в метрах)
+        speed (float): Скорость самолёта U (в м/с)
+    
+    Возвращает:
+        float: Расстояние S до цели (в метрах)
+    """
+    g = 9.81  # Ускорение свободного падения (м/с²)
+    fall_time = math.sqrt(2 * height / g)  # Время падения бомбы T
+    release_distance = speed * fall_time  # Расстояние S = U*T
+    return release_distance
+
+# Ввод данных
+H = float(input("Введите высоту полёта H (м): "))
+U = float(input("Введите скорость самолёта U (м/с): "))
+
+# Вычисление и вывод результата
+S = calculate_release_distance(H, U)
+print(f"Подлётное расстояние для сброса бомбы: {S:.2f} м")
+Задача на Си++
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+double calculateReleaseDistance(double height, double speed) {
+    /**
+     * Вычисляет подлётное расстояние S для сброса бомбы.
+     * 
+     * Параметры:
+     *     height: Высота полёта H (в метрах)
+     *     speed: Скорость самолёта U (в м/с)
+     * 
+     * Возвращает:
+     *     Расстояние S до цели (в метрах)
+     */
+    const double g = 9.81;  // Ускорение свободного падения (м/с²)
+    double fall_time = sqrt(2 * height / g);  // Время падения бомбы T
+    double release_distance = speed * fall_time;  // Расстояние S = U*T
+    return release_distance;
+}
+
+int main() {
+    double H, U;
+    
+    // Ввод данных
+    cout << "Введите высоту полёта H (м): ";
+    cin >> H;
+    cout << "Введите скорость самолёта U (м/с): ";
+    cin >> U;
+    
+    // Вычисление и вывод результата
+    double S = calculateReleaseDistance(H, U);
+    cout << "Подлётное расстояние для сброса бомбы: " << S << " м" << endl;
+    
+    return 0;
+}
