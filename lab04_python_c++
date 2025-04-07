@@ -1,61 +1,66 @@
 4 задача на питоне 
-
-import math
-
-# Ввод данных
-H = float(input("Введите высоту обрыва (H): "))
-V = float(input("Введите начальную скорость (V): "))
-alpha = float(input("Введите угол α (в градусах): "))
-t = float(input("Введите время t: "))
-g = 9.81  # Ускорение свободного падения
-
-# Перевод угла из градусов в радианы
-alpha_radians = math.radians(alpha)
-
-# Вычисление координат камня в момент времени t
-x_t = V * t * math.cos(alpha_radians)
-y_t = H + V * t * math.sin(alpha_radians) - 0.5 * g * t**2
-
-# Проверка, упал ли камень на дно обрыва
-y_t = max(y_t, 0)  # Если y_t < 0, то камень уже упал
-
-# Вывод результата
-print(f"Расстояние до края обрыва x(t): {x_t:.2f} м")
-print(f"Высота от дна обрыва y(t): {y_t:.2f} м")
-
-4 задача на си++
-
-#include <iostream>
+4 #include <iostream>
 #include <cmath>
-#include <algorithm>  // Для функции max
+#include <iomanip>
+
 using namespace std;
 
+const double g = 9.81; // Ускорение свободного падения
+
+// Функция для вычисления времени полета T методом итерации
+double compute_flight_time(double V, double a, double H, double epsilon = 1e-6, int max_iter = 100) {
+    double T = (V * sin(a) + sqrt(pow(V * sin(a), 2) + 2 * g * H)) / g; // Начальное приближение
+    double T_new;
+    
+    for (int i = 0; i < max_iter; ++i) {
+        T_new = (V * sin(a) + sqrt(pow(V * sin(a), 2) + 2 * g * H - 2 * g * (H + V * T * sin(a) - g * pow(T, 2) / 2))) / g;
+        
+        if (abs(T_new - T) < epsilon) {
+            return T_new;
+        }
+        
+        T = T_new;
+    }
+    
+    throw runtime_error("Метод итерации не сошелся за указанное число итераций");
+}
+
 int main() {
-    double H, V, alpha, t, g = 9.81;
-
-    // Ввод данных
-    cout << "Введите высоту обрыва (H): ";
-    cin >> H;
-    cout << "Введите начальную скорость (V): ";
-    cin >> V;
-    cout << "Введите угол α (в градусах): ";
-    cin >> alpha;
-    cout << "Введите время t: ";
-    cin >> t;
-
-    // Перевод угла из градусов в радианы
-    double alpha_radians = alpha * M_PI / 180;
-
-    // Вычисление координат камня в момент времени t
-    double x_t = V * t * cos(alpha_radians);
-    double y_t = H + V * t * sin(alpha_radians) - 0.5 * g * t * t;
-
-    // Проверка, упал ли камень на дно обрыва
-    y_t = max(y_t, 0.0);  // Если y_t < 0, то камень уже упал
-
-    // Вывод результата
-    cout << "Расстояние до края обрыва x(t): " << x_t << " м" << endl;
-    cout << "Высота от дна обрыва y(t): " << y_t << " м" << endl;
-
+    try {
+        double H, V, a_deg, t;
+        
+        // Ввод данных
+        cout << "Введите высоту обрыва H (м): ";
+        cin >> H;
+        cout << "Введите начальную скорость V (м/с): ";
+        cin >> V;
+        cout << "Введите угол броска a (градусы): ";
+        cin >> a_deg;
+        cout << "Введите время t (с): ";
+        cin >> t;
+        
+        // Преобразование угла в радианы
+        double a = a_deg * M_PI / 180.0;
+        
+        // Вычисление времени полета
+        double T = compute_flight_time(V, a, H);
+        
+        // Вычисление координат в момент времени t
+        double x = V * t * cos(a);
+        double y = (t <= T) ? (H + V * t * sin(a) - 0.5 * g * pow(t, 2)) : 0.0;
+        
+        // Вывод результатов
+        cout << fixed << setprecision(2);
+        cout << "\nРезультаты расчета:\n";
+        cout << "Время полета T (с): " << T << endl;
+        cout << "Расстояние от края обрыва x(t) (м): " << x << endl;
+        cout << "Высота от дна обрыва y(t) (м): " << y << endl;
+        cout << "Состояние: " << ((t <= T) ? "Камень в полете" : "Камень упал на дно") << endl;
+        
+    } catch (const exception& e) {
+        cerr << "Ошибка: " << e.what() << endl;
+        return 1;
+    }
+    
     return 0;
 }
