@@ -1,65 +1,94 @@
 6 задача на с++
-5 #include <iostream>
+6
+
+#include <iostream>
 #include <cmath>
 #include <iomanip>
-#include <stdexcept>
 
 using namespace std;
 
-const double g = 9.81; // Ускорение свободного падения (м/с²)
-
-// Функция для вычисления времени падения бомбы
-double calculate_fall_time(double H) {
-    return sqrt(2 * H / g);
+// Функция для вычисления общего времени движения лодки
+double calculate_total_time(double V, double U, double S) {
+    // Время по течению
+    double t1 = S / (V + U);
+    // Время против течения
+    double t2 = S / (V - U);
+    // Общее время
+    return t1 + t2;
 }
 
-// Функция для метода секущих (демонстрационная - в данной задаче не требуется)
-double secant_method(double (*f)(double), double x0, double x1, double tol, int max_iter) {
-    double x2;
+// Демонстрационная функция для метода Ньютона (не используется в основном расчете)
+double newton_method_example(double x) {
+    // Пример функции: f(x) = x^2 - 2 (для демонстрации)
+    return x * x - 2;
+}
+
+double newton_method_derivative(double x) {
+    // Производная примерной функции: f'(x) = 2x
+    return 2 * x;
+}
+
+void demonstrate_newton_method() {
+    cout << "\nДемонстрация метода Ньютона (нахождение корня x^2 - 2 = 0):\n";
+    
+    double x = 1.0;  // Начальное приближение
+    double epsilon = 1e-6;
+    int max_iter = 100;
+    
     for (int i = 0; i < max_iter; ++i) {
-        if (fabs(f(x1)) < tol) return x1;
-        if (fabs(x1 - x0) < tol) return x1;
+        double fx = newton_method_example(x);
+        double dfx = newton_method_derivative(x);
         
-        x2 = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0));
-        x0 = x1;
-        x1 = x2;
+        if (abs(fx) < epsilon) {
+            cout << "Найден корень: " << x << " (итераций: " << i + 1 << ")\n";
+            return;
+        }
+        
+        if (dfx == 0) {
+            cout << "Производная равна нулю. Метод не может продолжаться.\n";
+            return;
+        }
+        
+        x = x - fx / dfx;
     }
-    throw runtime_error("Метод секущих не сошелся");
+    
+    cout << "Метод не сошелся за " << max_iter << " итераций.\n";
 }
 
 int main() {
-    try {
-        double H, U;
-        
-        // Ввод данных
-        cout << "Введите высоту полета H (м): ";
-        cin >> H;
-        cout << "Введите скорость самолета U (м/с): ";
-        cin >> U;
-        
-        // Проверка входных данных
-        if (H <= 0 || U <= 0) {
-            throw invalid_argument("Высота и скорость должны быть положительными");
-        }
-        
-        // Вычисление времени падения
-        double T = calculate_fall_time(H);
-        
-        // Вычисление подлетного расстояния
-        double S = U * T;
-        
-        // Вывод результатов
-        cout << fixed << setprecision(2);
-        cout << "\nРезультаты расчета:\n";
-        cout << "Время падения бомбы T (с): " << T << endl;
-        cout << "Подлетное расстояние S (м): " << S << endl;
-        
-    } catch (const exception& e) {
-        cerr << "Ошибка: " << e.what() << endl;
+    double V, U, S;
+    
+    // Ввод данных
+    cout << "Введите скорость лодки в стоячей воде V (км/ч): ";
+    cin >> V;
+    cout << "Введите скорость течения реки U (км/ч): ";
+    cin >> U;
+    cout << "Введите расстояние между пунктами S (км): ";
+    cin >> S;
+    
+    // Проверка корректности данных
+    if (V <= 0  U < 0  S <= 0) {
+        cout << "Ошибка: скорости и расстояние должны быть положительными.\n";
         return 1;
     }
     
+    if (U >= V) {
+        cout << "Ошибка: скорость течения не может быть больше или равна скорости лодки.\n";
+        return 1;
+    }
+    
+    // Вычисление общего времени
+    double total_time = calculate_total_time(V, U, S);
+    
+    // Вывод результатов
+    cout << fixed << setprecision(2);
+    cout << "\nРезультаты расчета:\n";
+    cout << "Время движения по течению: " << S / (V + U) << " ч\n";
+    cout << "Время движения против течения: " << S / (V - U) << " ч\n";
+    cout << "Общее время движения: " << total_time << " ч\n";
+    
+    // Демонстрация метода Ньютона (для учебных целей)
+    demonstrate_newton_method();
+    
     return 0;
 }
-    
-    
