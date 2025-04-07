@@ -1,62 +1,63 @@
-import math
-
-def calculate_release_distance(height, speed):
-    """
-    Вычисляет подлётное расстояние S для сброса бомбы.
-    
-    Параметры:
-        height (float): Высота полёта H (в метрах)
-        speed (float): Скорость самолёта U (в м/с)
-    
-    Возвращает:
-        float: Расстояние S до цели (в метрах)
-    """
-    g = 9.81  # Ускорение свободного падения (м/с²)
-    fall_time = math.sqrt(2 * height / g)  # Время падения бомбы T
-    release_distance = speed * fall_time  # Расстояние S = U*T
-    return release_distance
-
-# Ввод данных
-H = float(input("Введите высоту полёта H (м): "))
-U = float(input("Введите скорость самолёта U (м/с): "))
-
-# Вычисление и вывод результата
-S = calculate_release_distance(H, U)
-print(f"Подлётное расстояние для сброса бомбы: {S:.2f} м")
-Задача на Си++
-#include <iostream>
+5 задача на с++
+5 #include <iostream>
 #include <cmath>
+#include <iomanip>
+#include <stdexcept>
+
 using namespace std;
 
-double calculateReleaseDistance(double height, double speed) {
-    /**
-     * Вычисляет подлётное расстояние S для сброса бомбы.
-     * 
-     * Параметры:
-     *     height: Высота полёта H (в метрах)
-     *     speed: Скорость самолёта U (в м/с)
-     * 
-     * Возвращает:
-     *     Расстояние S до цели (в метрах)
-     */
-    const double g = 9.81;  // Ускорение свободного падения (м/с²)
-    double fall_time = sqrt(2 * height / g);  // Время падения бомбы T
-    double release_distance = speed * fall_time;  // Расстояние S = U*T
-    return release_distance;
+const double g = 9.81; // Ускорение свободного падения (м/с²)
+
+// Функция для вычисления времени падения бомбы
+double calculate_fall_time(double H) {
+    return sqrt(2 * H / g);
+}
+
+// Функция для метода секущих (демонстрационная - в данной задаче не требуется)
+double secant_method(double (*f)(double), double x0, double x1, double tol, int max_iter) {
+    double x2;
+    for (int i = 0; i < max_iter; ++i) {
+        if (fabs(f(x1)) < tol) return x1;
+        if (fabs(x1 - x0) < tol) return x1;
+        
+        x2 = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0));
+        x0 = x1;
+        x1 = x2;
+    }
+    throw runtime_error("Метод секущих не сошелся");
 }
 
 int main() {
-    double H, U;
-    
-    // Ввод данных
-    cout << "Введите высоту полёта H (м): ";
-    cin >> H;
-    cout << "Введите скорость самолёта U (м/с): ";
-    cin >> U;
-    
-    // Вычисление и вывод результата
-    double S = calculateReleaseDistance(H, U);
-    cout << "Подлётное расстояние для сброса бомбы: " << S << " м" << endl;
+    try {
+        double H, U;
+        
+        // Ввод данных
+        cout << "Введите высоту полета H (м): ";
+        cin >> H;
+        cout << "Введите скорость самолета U (м/с): ";
+        cin >> U;
+        
+        // Проверка входных данных
+        if (H <= 0 || U <= 0) {
+            throw invalid_argument("Высота и скорость должны быть положительными");
+        }
+        
+        // Вычисление времени падения
+        double T = calculate_fall_time(H);
+        
+        // Вычисление подлетного расстояния
+        double S = U * T;
+        
+        // Вывод результатов
+        cout << fixed << setprecision(2);
+        cout << "\nРезультаты расчета:\n";
+        cout << "Время падения бомбы T (с): " << T << endl;
+        cout << "Подлетное расстояние S (м): " << S << endl;
+        
+    } catch (const exception& e) {
+        cerr << "Ошибка: " << e.what() << endl;
+        return 1;
+    }
     
     return 0;
 }
