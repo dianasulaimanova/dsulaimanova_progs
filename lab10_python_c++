@@ -1,35 +1,25 @@
-def calculate_g(h):
-    G = 6.672e-11  # Нм²/кг²
-    M = 5.96e24    # кг
-    R = 6.37e6     # м
-    g = (G * M) / ((R + h) * 2)
-    return g
-
-h = float(input("Введите высоту h над поверхностью Земли (в метрах): "))
-
-
-g = calculate_g(h)
-print(f"Ускорение свободного падения g на высоте {h} м: {g:.4f} м/с²")
-задача на си++
-#include <iostream>
+10 #include <iostream>
 #include <cmath>
-
-const double G = 6.672e-11;  // Нм²/кг²
-const double M = 5.96e24;    // кг
-const double R = 6.37e6;     // м
-
-double calculate_g(double h) {
-    return (G * M) / pow((R + h), 2);
-}
+#include <iomanip>
+using namespace std;
 
 int main() {
+    const double G = 6.672e-11, M = 5.96e24, R = 6.37e6;
     double h;
-
-    std::cout << "Введите высоту h над поверхностью Земли (в метрах): ";
-    std::cin >> h;
-
-    double g = calculate_g(h);
-    std::cout << "Ускорение свободного падения g на высоте " << h << " м: " << g << " м/с²" << std::endl;
-
+    
+    cout << "Введите высоту (м): ";
+    cin >> h;
+    
+    double g = G * M / pow(R + h, 2);
+    cout << fixed << setprecision(2);
+    cout << "g = " << g << " м/с²\n";
+    
+    // Таблица значений
+    cout << "\nВысота(км)\tg(м/с²)\n";
+    for(int km = 0; km <= 1000; km += 100) {
+        double h = km * 1000;
+        cout << km << "\t\t" << G*M/pow(R+h,2) << "\n";
+    }
+    
     return 0;
 }
