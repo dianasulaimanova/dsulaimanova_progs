@@ -1,65 +1,65 @@
-def calculate_total_time(S, V, U):
-    if V <= U:
-        print("Ошибка: Скорость лодки должна быть больше скорости течения реки.")
-        return None
-
-    t1 = S / (V + U) # Время движения по течению
-    t2 = S / (V - U) # Время движения против течения
-    T = t1 + t2       # Общее время
-
-    return T
-
-
-# Получаем входные данные от пользователя
-try:
-    S = float(input("Введите расстояние между пунктами A и B (S): "))
-    V = float(input("Введите скорость лодки в стоячей воде (V): "))
-    U = float(input("Введите скорость течения реки (U): "))
-
-    # Вычисляем и выводим общее время
-    total_time = calculate_total_time(S, V, U)
-    if total_time is not None:
-        print("Общее время движения лодки (T):", total_time)
-
-except ValueError:
-print("Ошибка: Введите числовые( значения для S, V и U.")
- задача на Си++
-#include <iostream>
+6 задача на с++
+5 #include <iostream>
+#include <cmath>
+#include <iomanip>
 #include <stdexcept>
 
-double calculate_total_time(double S, double V, double U) {
-    if (V <= U) {
-        std::cout << "Ошибка: Скорость лодки должна быть больше скорости течения реки." << std::endl;
-        return -1; // Используем -1 для обозначения ошибки
+using namespace std;
+
+const double g = 9.81; // Ускорение свободного падения (м/с²)
+
+// Функция для вычисления времени падения бомбы
+double calculate_fall_time(double H) {
+    return sqrt(2 * H / g);
+}
+
+// Функция для метода секущих (демонстрационная - в данной задаче не требуется)
+double secant_method(double (*f)(double), double x0, double x1, double tol, int max_iter) {
+    double x2;
+    for (int i = 0; i < max_iter; ++i) {
+        if (fabs(f(x1)) < tol) return x1;
+        if (fabs(x1 - x0) < tol) return x1;
+        
+        x2 = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0));
+        x0 = x1;
+        x1 = x2;
     }
-
-    double t1 = S / (V + U); // Время движения по течению
-    double t2 = S / (V - U); // Время движения против течения
-    double T = t1 + t2;      // Общее время
-
-    return T;
+    throw runtime_error("Метод секущих не сошелся");
 }
 
 int main() {
-    double S, V, U;
-
-    // Получаем входные данные от пользователя
     try {
-        std::cout << "Введите расстояние между пунктами A и B (S): ";
-        std::cin >> S;
-        std::cout << "Введите скорость лодки в стоячей воде (V): ";
-        std::cin >> V;
-        std::cout << "Введите скорость течения реки (U): ";
-        std::cin >> U;
-
-        double total_time = calculate_total_time(S, V, U);
-        if (total_time != -1) {
-            std::cout << "Общее время движения лодки (T): " << total_time << std::endl;
+        double H, U;
+        
+        // Ввод данных
+        cout << "Введите высоту полета H (м): ";
+        cin >> H;
+        cout << "Введите скорость самолета U (м/с): ";
+        cin >> U;
+        
+        // Проверка входных данных
+        if (H <= 0 || U <= 0) {
+            throw invalid_argument("Высота и скорость должны быть положительными");
         }
-
-    } catch (const std::invalid_argument& e) {
-        std::cout << "Ошибка: Введите числовые значения для S, V и U." << std::endl;
+        
+        // Вычисление времени падения
+        double T = calculate_fall_time(H);
+        
+        // Вычисление подлетного расстояния
+        double S = U * T;
+        
+        // Вывод результатов
+        cout << fixed << setprecision(2);
+        cout << "\nРезультаты расчета:\n";
+        cout << "Время падения бомбы T (с): " << T << endl;
+        cout << "Подлетное расстояние S (м): " << S << endl;
+        
+    } catch (const exception& e) {
+        cerr << "Ошибка: " << e.what() << endl;
+        return 1;
     }
-
+    
     return 0;
 }
+    
+    
