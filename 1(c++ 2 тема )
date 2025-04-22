@@ -1,0 +1,70 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+
+using namespace std;
+
+// Подынтегральная функция: x^alpha * ln(x)
+double f(double x, double alpha) {
+    if (x == 0.0) {
+        // При x=0 и alpha > -1, x^alpha * ln(x) стремится к 0
+        return 0.0;
+    }
+    return pow(x, alpha) * log(x);
+}
+
+// Метод прямоугольников (срединных точек)
+double rectangle_method(double a, double b, double alpha, int n) {
+    double h = (b - a) / n;
+    double sum = 0.0;
+    for (int i = 0; i < n; ++i) {
+        double x = a + (i + 0.5) * h;
+        sum += f(x, alpha);
+    }
+    return sum * h;
+}
+
+// Метод трапеций
+double trapezoid_method(double a, double b, double alpha, int n) {
+    double h = (b - a) / n;
+    double sum = 0.5 * (f(a, alpha) + f(b, alpha));
+    for (int i = 1; i < n; ++i) {
+        double x = a + i * h;
+        sum += f(x, alpha);
+    }
+    return sum * h;
+}
+
+int main() {
+    double alpha;
+    cout << "Введите значение alpha (alpha > -1 для сходимости интеграла): ";
+    cin >> alpha;
+
+    if (alpha <= -1) {
+        cout << "Интеграл расходится при alpha <= -1." << endl;
+        return 0;
+    }
+
+    double a = 0.0; // Нижний предел интегрирования
+    double b = 1.0; // Верхний предел интегрирования
+    double eps = 1e-6; // Точность
+    int n = 1000; // Начальное число разбиений
+    double prev_rect, prev_trap;
+    double rect_result = rectangle_method(a, b, alpha, n);
+    double trap_result = trapezoid_method(a, b, alpha, n);
+
+    // Уточнение результата с заданной точностью
+    do {
+        prev_rect = rect_result;
+        prev_trap = trap_result;
+        n *= 2;
+        rect_result = rectangle_method(a, b, alpha, n);
+        trap_result = trapezoid_method(a, b, alpha, n);
+    } while (fabs(rect_result - prev_rect) > eps || fabs(trap_result - prev_trap) > eps);
+
+    cout << fixed << setprecision(6);
+    cout << "Результат методом прямоугольников: " << rect_result << endl;
+    cout << "Результат методом трапеций: " << trap_result << endl;
+
+    return 0;
+}
