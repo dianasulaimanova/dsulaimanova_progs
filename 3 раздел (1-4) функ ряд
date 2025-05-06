@@ -1,0 +1,69 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+
+using namespace std;
+
+// Общая функция для вычисления сходящихся произведений
+double compute_product(double initial, double (*term)(int), double precision, int max_iter = 1000000) {
+    double product = initial;
+    double prev;
+    int n = 1;
+    
+    do {
+        prev = product;
+        product *= term(n);
+        n++;
+    } while (abs(product - prev) > precision && n <= max_iter);
+    
+    return product;
+}
+
+// Функции-члены для каждого произведения
+double term1(int n) { return 1.0 - 1.0/(n*n); }
+double term2(int x) { return 1.0 + pow(1.0/3.0, 3*x); }
+double term3(int n) { return (3.0*n + 1.0)/(2.0*n - 1.0); }
+double term4(int n) { return 1.0 + 2.0/(3.0*n + n*n); }
+
+// Проверка на расходимость через логарифмическую сумму
+bool check_divergence(double (*term)(int), int check_iter = 10000) {
+    double log_sum = 0.0;
+    for (int i = 1; i <= check_iter; i++) {
+        log_sum += log(term(i));
+        if (log_sum > 100) return true;
+    }
+    return false;
+}
+
+int main() {
+    const double precision = 1e-6;
+    
+    // Продукт 1
+    double p1 = compute_product(1.0, term1, precision, 2);
+    cout << "1) ∏(1-1/n²) ≈ " << p1 << " (теоретическое: 0.5)\n\n";
+    
+    // Продукт 2
+    double p2 = compute_product(1.0, term2, precision, 0);
+    cout << "2) ∏(1+(1/3)^(3x)) ≈ " << p2 << "\n\n";
+    
+    // Продукт 3
+    if (check_divergence(term3)) {
+        cout << "3) ∏((3n+1)/(2n-1)) расходится\n";
+        cout << "   Демонстрация роста:\n";
+        double p3 = 1.0;
+        for (int n = 1; n <= 10; n++) {
+            p3 *= term3(n);
+            cout << "   n=" << n << ": " << p3 << "\n";
+        }
+    } else {
+        double p3 = compute_product(1.0, term3, precision);
+        cout << "3) ∏((3n+1)/(2n-1)) ≈ " << p3 << "\n";
+    }
+    cout << "\n";
+    
+    // Продукт 4
+    double p4 = compute_product(1.0, term4, precision);
+    cout << "4) ∏(1+2/(3n+n²)) ≈ " << p4 << "\n";
+    
+    return 0;
+}
