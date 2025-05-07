@@ -1,0 +1,47 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+
+using namespace std;
+
+// Функция для вычисления суммы первого ряда
+double sum_series1(double x, double precision = 1e-6) {
+    double sum = 0.0;
+    double term;
+    int n = 1;
+    
+    do {
+        term = pow(-1, n) / (sin(n * x) + 1 + n * n);
+        sum += term;
+        n++;
+    } while (abs(term) > precision && n < 1000000); // Защита от бесконечного цикла
+    
+    return sum;
+}
+
+// Функция для вычисления суммы второго ряда
+double sum_series2(double x, double precision = 1e-6) {
+    double sum = 0.0;
+    double term;
+    int n = 1;
+    
+    do {
+        term = cos(n * x) / (exp(-n * x) + exp(n));
+        sum += term;
+        n++;
+    } while (abs(term) > precision && n < 1000000); // Защита от бесконечного цикла
+    
+    return sum;
+}
+
+int main() {
+    double x;
+    cout << "Введите значение x: ";
+    cin >> x;
+    
+    cout << fixed << setprecision(8);
+    cout << "1) Сумма ряда ∑(-1)^n/(sin(nx)+1+n²) = " << sum_series1(x) << endl;
+    cout << "2) Сумма ряда ∑cos(nx)/(e^(-nx)+e^n) = " << sum_series2(x) << endl;
+    
+    return 0;
+}
