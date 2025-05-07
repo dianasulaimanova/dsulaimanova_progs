@@ -1,0 +1,82 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+#include <vector>
+
+using namespace std;
+
+// Функция для вычисления суммы первого ряда
+double sum_series1(double x, double precision = 1e-6) {
+    double sum = 0.0;
+    double term;
+    int n = 0;
+    
+    do {
+        term = pow(x + 8, n) / ((n + 1) * pow(6, n));
+        sum += term;
+        n++;
+    } while (abs(term) > precision && n < 1000000);
+    
+    return sum;
+}
+
+// Функция для определения радиуса сходимости первого ряда
+double convergence_radius1() {
+    // Используем признак Даламбера: R = lim |a_n/a_{n+1}|
+    // Для данного ряда a_n = 1/((n+1)*6^n)
+    // При n->∞ отношение стремится к 6
+    return 6.0;
+}
+
+// Функция для вычисления суммы второго ряда
+double sum_series2(double x, double precision = 1e-6) {
+    double sum = 0.0;
+    double term;
+    int n = 0;
+    
+    do {
+        term = pow(x - 2, n) / ((2*n + 1)*(4*n + 3));
+        sum += term;
+        n++;
+    } while (abs(term) > precision && n < 1000000);
+    
+    return sum;
+}
+
+// Функция для определения радиуса сходимости второго ряда
+double convergence_radius2() {
+    // Используем признак Даламбера: R = lim |a_n/a_{n+1}|
+    // Для данного ряда a_n = 1/((2n+1)(4n+3))
+    // При n->∞ отношение стремится к 1
+    return 1.0;
+}
+
+int main() {
+    // Вычисление и вывод информации о радиусах сходимости
+    cout << "Радиусы сходимости рядов:" << endl;
+    cout << "1) R = " << convergence_radius1() << " (ряд сходится при |x + 8| < 6)" << endl;
+    cout << "2) R = " << convergence_radius2() << " (ряд сходится при |x - 2| < 1)" << endl << endl;
+
+    // Ввод значения x с проверкой на сходимость
+    double x;
+    cout << "Введите значение x: ";
+    cin >> x;
+
+    // Проверка сходимости для первого ряда
+    if (abs(x + 8) < convergence_radius1()) {
+        cout << fixed << setprecision(8);
+        cout << "1) Сумма ряда ∑(x+8)^n/((n+1)6^n) = " << sum_series1(x) << endl;
+    } else {
+        cout << "1) Ряд расходится при x = " << x << endl;
+    }
+
+    // Проверка сходимости для второго ряда
+    if (abs(x - 2) < convergence_radius2()) {
+        cout << fixed << setprecision(8);
+        cout << "2) Сумма ряда ∑(x-2)^n/((2n+1)(4n+3)) = " << sum_series2(x) << endl;
+    } else {
+        cout << "2) Ряд расходится при x = " << x << endl;
+    }
+
+    return 0;
+}
