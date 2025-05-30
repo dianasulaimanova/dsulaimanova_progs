@@ -1,0 +1,54 @@
+import math
+
+def sum_series1(x, precision=1e-6):
+    sum = 0.0
+    n = 0
+    term = 0.0
+    
+    while abs(term) > precision and n < 1000000:
+        term = (x + 8) ** n / ((n + 1) * 6 ** n)
+        sum += term
+        n += 1
+    
+    return sum
+
+
+def convergence_radius1():
+    return 6.0
+
+
+def sum_series2(x, precision=1e-6):
+    sum = 0.0
+    n = 0
+    term = 0.0
+    
+    while abs(term) > precision and n < 1000000:
+        term = (x - 2) ** n / ((2 * n + 1) * (4 * n + 3))
+        sum += term
+        n += 1
+    
+    return sum
+
+
+def convergence_radius2():
+    return 1.0
+
+
+if __name__ == "__main__":
+    
+    print("Radii of convergence of the series:")
+    print("1) R =", convergence_radius1(), "(the series converges for |x + 8| < 6)")
+    print("2) R =", convergence_radius2(), "(the series converges for |x - 2| < 1)")
+    print()
+
+    x = float(input("Enter the value of x: "))
+
+    if abs(x + 8) < convergence_radius1():
+        print(f"1) The sum of the series ∑(x+8)^n/((n+1)6^n) = {sum_series1(x):.8f}")
+    else:
+        print(f"1) The series diverges for x = {x}")
+
+    if abs(x - 2) < convergence_radius2():
+        print(f"2) The sum of the series ∑(x-2)^n/((2n+1)(4n+3)) = {sum_series2(x):.8f}")
+    else:
+        print(f"2) The series diverges for x = {x}")
